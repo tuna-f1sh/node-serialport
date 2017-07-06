@@ -13,16 +13,15 @@ struct WriteBaton {
   int fd;
   char* bufferData;
   size_t bufferLength;
-  size_t offset;
   size_t bytesWritten;
   Nan::Persistent<v8::Object> buffer;
   Nan::Callback callback;
-  int result;
   char errorString[ERROR_STRING_SIZE];
 };
 
 NAN_METHOD(Write);
 void EIO_Write(uv_work_t* req);
+void EIO_AfterOverlappedWrite(DWORD errorCode, DWORD bytesWritten, OVERLAPPED ov);
 void EIO_AfterWrite(uv_work_t* req);
 
 struct ReadBaton {
