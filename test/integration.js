@@ -243,5 +243,22 @@ function integrationTest(platform, testPort, binding) {
         });
       });
     });
+
+    describe('#drain', () => {
+      it('waits for in progress writes to finish', (done) => {
+        const port = new SerialPort(testPort);
+        port.on('error', done);
+        let finishedWrite = false;
+        port.on('open', () => {
+          port.write(Buffer.alloc(10), () => {
+            finishedWrite = true;
+          });
+          port.drain(() => {
+            assert.isTrue(finishedWrite);
+            done();
+          });
+        });
+      });
+    });
   });
 }

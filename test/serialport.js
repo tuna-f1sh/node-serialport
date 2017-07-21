@@ -802,6 +802,21 @@ describe('SerialPort', () => {
           done();
         });
       });
+
+      it('waits for in progress writes to finish', (done) => {
+        const port = new SerialPort('/dev/exists');
+        port.on('error', done);
+        let finishedWrite = false;
+        port.on('open', () => {
+          port.write(Buffer.alloc(10), () => {
+            finishedWrite = true;
+          });
+          port.drain(() => {
+            assert.isTrue(finishedWrite);
+            done();
+          });
+        });
+      });
     });
 
     describe('#get', () => {
