@@ -38,7 +38,12 @@ serialPort.on('open', () => {
 
     // Set a timeout so the process exits if no data received
     setTimeout(() => {
-      console.log('Receive data timeout');
+      const data = serialPort.read();
+      if (data != null) {
+        console.log(`Receive data timeout: ${data.length} B of ${expected} B received`);
+      } else {
+        console.log(`Receive data timeout: 0 B of ${expected} B received`);
+      }
       process.exit(1);
     }, 10000);
   });
